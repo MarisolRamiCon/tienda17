@@ -1,9 +1,9 @@
 package com.example.tienda17.controller;
 
-import com.example.tienda17.feign.PedidosCliente;
 import com.example.tienda17.model.Pedido;
 import com.example.tienda17.service.impl.PedidosService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,27 +18,50 @@ public class PedidosController {
     }
 
     @GetMapping
-    public List<Pedido> getAll() {
-        return pedidosService.readAll();
+    public ResponseEntity<?> getAll() {
+        try {
+            return ResponseEntity.ok(pedidosService.readAll());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener pedidos: " + e.getMessage());
+        }
     }
 
     @GetMapping("/{id}")
-    public Pedido getById(@PathVariable String id) {
-        return pedidosService.readById(id);
+    public ResponseEntity<?> getById(@PathVariable String id) {
+        try {
+            return ResponseEntity.ok(pedidosService.readById(id));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al obtener pedido: " + e.getMessage());
+        }
     }
 
     @PostMapping
-    public Pedido create(@RequestBody Pedido pedido) {
-        return pedidosService.create(pedido);
+    public ResponseEntity<?> create(@RequestBody Pedido pedido) {
+        try {
+            return ResponseEntity.ok(pedidosService.create(pedido));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al crear pedido: " + e.getMessage());
+        }
     }
 
     @PutMapping("/{id}")
-    public Pedido update(@PathVariable String id, @RequestBody Pedido pedido) {
-        return pedidosService.update(id, pedido);
+    public ResponseEntity<?> update(@PathVariable String id, @RequestBody Pedido pedido) {
+        try {
+            return ResponseEntity.ok(pedidosService.update(id, pedido));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar pedido: " + e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable String id) {
-        pedidosService.delete(id);
+    public ResponseEntity<?> delete(@PathVariable String id) {
+        try {
+            Pedido pedidoInactivo = pedidosService.delete(id);
+            return ResponseEntity.ok(pedidoInactivo); 
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al eliminar pedido: " + e.getMessage());
+        }
     }
 }

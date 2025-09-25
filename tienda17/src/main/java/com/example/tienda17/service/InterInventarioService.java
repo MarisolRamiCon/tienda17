@@ -12,4 +12,5 @@ public interface InterInventarioService {
     public Inventario update(Inventario inventario);
     public String deleteById(Integer id);
     public List<Inventario> stockMayor(Integer stock);
+    public List<Inventario> productosAgotados();
 }

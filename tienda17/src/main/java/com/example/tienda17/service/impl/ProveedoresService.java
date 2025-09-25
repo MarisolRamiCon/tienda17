@@ -1,10 +1,11 @@
 package com.example.tienda17.service.impl;
 
+import com.example.tienda17.dto.ProveedoresRequest;
+import com.example.tienda17.dto.ProveedoresResponse;
 import com.example.tienda17.entity.Proveedores;
-import com.example.tienda17.model.ProveedoresDto;
+import com.example.tienda17.mapper.ProveedoresMapper;
 import com.example.tienda17.repository.ProveedoresRepository;
 import com.example.tienda17.service.InterProveedoresService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,40 +13,57 @@ import java.util.Optional;
 
 @Service
 public class ProveedoresService implements InterProveedoresService {
-    @Autowired
-    ProveedoresRepository proveedoresRepository;
+
+    private final ProveedoresRepository proveedoresRepository;
+
+    public ProveedoresService(ProveedoresRepository proveedoresRepository) {
+        this.proveedoresRepository = proveedoresRepository;
+    }
+
 
     @Override
-    public List<ProveedoresDto> readAll() {
-        return proveedoresRepository.findAll().stream().map(p->{
-            ProveedoresDto proveedoresDto = new ProveedoresDto(p.getNombreEmpresa(),p.getContacto(),p.getTelefono());
-            return proveedoresDto;
-        }).toList();
+    public List<ProveedoresResponse> readAll() {
+        return proveedoresRepository.findAll().stream()
+                .filter(Proveedores::getActivo)
+                .map(p -> new ProveedoresResponse(p.getNombreEmpresa(), p.getContacto(), p.getTelefono()))
+                .toList();
     }
 
     @Override
-    public Optional<Proveedores> readById(Integer id) {
-        return proveedoresRepository.findById(id);
+    public Optional<ProveedoresResponse> readById(Integer id) {
+        return proveedoresRepository.findById(id)
+                .map(ProveedoresMapper::toResponse);
     }
 
     @Override
-    public Proveedores create(Proveedores proveedores) {
-        return proveedoresRepository.save(proveedores);
+    public ProveedoresResponse create(ProveedoresRequest request) {
+        Proveedores entity = ProveedoresMapper.toEntity(request);
+        Proveedores saved = proveedoresRepository.save(entity);
+        return ProveedoresMapper.toResponse(saved);
     }
 
     @Override
-    public Proveedores update(Proveedores proveedores) {
-        return proveedoresRepository.save((proveedores));
+    public ProveedoresResponse update(Integer id, ProveedoresRequest request) {
+        Proveedores entity = proveedoresRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Proveedor no encontrado"));
+
+        entity.setNombreEmpresa(request.getNombreEmpresa());
+        entity.setContacto(request.getContacto());
+        entity.setEmail(request.getEmail());
+        entity.setTelefono(request.getTelefono());
+
+        Proveedores updated = proveedoresRepository.save(entity);
+        return ProveedoresMapper.toResponse(updated);
     }
 
     @Override
     public String deleteById(Integer id) {
-        Optional<Proveedores> provedor = proveedoresRepository.findById(id);
-        if(provedor.isPresent()){
-            Proveedores proveedores = provedor.get();
-            proveedores.setActivo(false);
-            proveedoresRepository.save(proveedores);
-            return "Proveedor con id: " + id + ". eliminado.";
+        Optional<Proveedores> proveedorOpt = proveedoresRepository.findById(id);
+        if (proveedorOpt.isPresent()) {
+            Proveedores proveedor = proveedorOpt.get();
+            proveedor.setActivo(false);          // marcamos como inactivo
+            proveedoresRepository.save(proveedor); // guardamos el cambio
+            return "Proveedor con id " + id + " dado de baja";
         } else {
             return "Proveedor no encontrado";
         }

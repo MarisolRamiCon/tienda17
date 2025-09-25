@@ -1,15 +1,16 @@
 package com.example.tienda17.service;
 
-import com.example.tienda17.entity.Proveedores;
-import com.example.tienda17.model.ProveedoresDto;
+import com.example.tienda17.dto.ProveedoresRequest;
+import com.example.tienda17.dto.ProveedoresResponse;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface InterProveedoresService {
-    public List<ProveedoresDto> readAll();
-    public Optional<Proveedores> readById(Integer id);
-    public Proveedores create(Proveedores proveedores);
-    public Proveedores update(Proveedores proveedores);
-    public String deleteById(Integer id);
+
+    List<ProveedoresResponse> readAll();
+    Optional<ProveedoresResponse> readById(Integer id);
+    ProveedoresResponse create(ProveedoresRequest request);
+    ProveedoresResponse update(Integer id, ProveedoresRequest request);
+    String deleteById(Integer id);
 }

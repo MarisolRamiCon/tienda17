@@ -44,5 +44,8 @@ public class InventarioService implements InterInventarioService {
         return inventarioRepository.findByStockGreaterThan(stock);
     }
 
+    public List<Inventario> productosAgotados() {
+        return inventarioRepository.productosAgotados();
+    }
 
 }

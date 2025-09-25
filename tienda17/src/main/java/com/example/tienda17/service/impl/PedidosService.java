@@ -2,7 +2,6 @@ package com.example.tienda17.service.impl;
 
 import com.example.tienda17.feign.PedidosCliente;
 import com.example.tienda17.model.Pedido;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +16,7 @@ public class PedidosService{
     }
 
     public List<Pedido> readAll() {
-        return pedidosCliente.readAll();
+        return pedidosCliente.readAll().stream().filter(p -> p.getActivo()).toList();
     }
 
     public Pedido readById(String id) {
@@ -32,8 +31,10 @@ public class PedidosService{
         return pedidosCliente.update(id, pedido);
     }
 
-    public void delete(String id) {
-        pedidosCliente.delete(id);
+    public Pedido delete(String id) {
+        Pedido pedido = pedidosCliente.readById(id);
+        pedido.setActivo(false);
+        return pedidosCliente.update(id, pedido);
     }
 
 }

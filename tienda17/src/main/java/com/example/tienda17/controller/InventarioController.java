@@ -3,7 +3,6 @@ package com.example.tienda17.controller;
 import com.example.tienda17.entity.Inventario;
 import com.example.tienda17.service.impl.InventarioService;
 import jakarta.websocket.server.PathParam;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,8 +12,11 @@ import java.util.Optional;
 @RequestMapping("/inndata17/tienda")
 public class InventarioController {
 
-    @Autowired
-    InventarioService inventarioService;
+    private final InventarioService inventarioService;
+
+    public InventarioController(InventarioService inventarioService) {
+        this.inventarioService = inventarioService;
+    }
 
     @GetMapping("/inventario")
     public List<Inventario> readAll(){
@@ -44,6 +46,11 @@ public class InventarioController {
     @GetMapping("/inventarioMayor")
     public List<Inventario> stockMayor(@PathParam("stock") Integer stock){
         return inventarioService.stockMayor(stock);
+    }
+
+    @GetMapping("/productosAgotados")
+    public List<Inventario> productosAgotados() {
+        return inventarioService.productosAgotados();
     }
 
 }

@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class Pedido {
     private String producto;
     private Double precio;
+    private Boolean activo = true;
 }
