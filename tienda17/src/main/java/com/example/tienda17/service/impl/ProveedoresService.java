@@ -9,6 +9,7 @@ import com.example.tienda17.service.InterProveedoresService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -23,9 +24,13 @@ public class ProveedoresService implements InterProveedoresService {
 
     @Override
     public List<ProveedoresResponse> readAll() {
-        return proveedoresRepository.findAll().stream()
+        List<Proveedores> proveedores = proveedoresRepository.findAll();
+        if (proveedores.isEmpty()) {
+            throw new NoSuchElementException("No se encontraron proveedores");
+        }
+        return proveedores.stream()
                 .filter(Proveedores::getActivo)
-                .map(p -> new ProveedoresResponse(p.getNombreEmpresa(), p.getContacto(), p.getTelefono()))
+                .map(ProveedoresMapper::toResponse)
                 .toList();
     }
 

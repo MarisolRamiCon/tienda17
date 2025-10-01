@@ -6,6 +6,7 @@ import com.example.tienda17.service.impl.ProveedoresService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
@@ -25,8 +26,9 @@ public class ProveedoresController {
     @GetMapping("/proveedores/{id}")
     public ProveedoresResponse readById(@PathVariable Integer id) {
         return proveedoresService.readById(id)
-                .orElseThrow(() -> new RuntimeException("Proveedor no encontrado"));
+                .orElseThrow(() -> new NoSuchElementException("Proveedor no encontrado con id: " + id));
     }
+
 
     @PostMapping("/proveedores")
     public ProveedoresResponse create(@RequestBody ProveedoresRequest request) {
