@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -115,4 +116,31 @@ class InventarioServiceTest {
         assertEquals(0, result.get(0).getStock());
         verify(inventarioRepository, times(1)).productosAgotados();
     }
+
+    @Test
+    void testReadByIdSuccess() {
+        Inventario producto = new Inventario(1, 101, 10);
+
+        when(inventarioRepository.findById(1)).thenReturn(Optional.of(producto));
+
+        Inventario result = inventarioService.ReadById(1).orElseThrow(() ->
+                new NoSuchElementException("Inventario no encontrado con id: 1"));
+
+        assertNotNull(result);
+        assertEquals(101, result.getProducto());
+        assertEquals(10, result.getStock());
+    }
+
+    @Test
+    void testReadByIdNotFound() {
+        when(inventarioRepository.findById(99)).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(NoSuchElementException.class, () -> {
+            inventarioService.ReadById(99).orElseThrow(() ->
+                    new NoSuchElementException("Inventario no encontrado con id: 99"));
+        });
+
+        assertEquals("Inventario no encontrado con id: 99", exception.getMessage());
+    }
+
 }

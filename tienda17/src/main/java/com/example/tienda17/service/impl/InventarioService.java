@@ -3,7 +3,6 @@ package com.example.tienda17.service.impl;
 import com.example.tienda17.entity.Inventario;
 import com.example.tienda17.repository.InventarioRepository;
 import com.example.tienda17.service.InterInventarioService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,8 +10,11 @@ import java.util.Optional;
 
 @Service
 public class InventarioService implements InterInventarioService {
-    @Autowired
-    InventarioRepository inventarioRepository;
+    private final InventarioRepository inventarioRepository;
+
+    public InventarioService(InventarioRepository inventarioRepository) {
+        this.inventarioRepository = inventarioRepository;
+    }
 
     public List<Inventario> readAll(){
         return inventarioRepository.findAll();
