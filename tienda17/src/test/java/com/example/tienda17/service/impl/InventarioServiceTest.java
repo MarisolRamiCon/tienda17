@@ -7,10 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
 import java.util.List;
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -21,7 +19,6 @@ class InventarioServiceTest {
 
     @InjectMocks
     private InventarioService inventarioService;
-
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -37,6 +34,7 @@ class InventarioServiceTest {
         List<Inventario> result = inventarioService.readAll();
 
         assertEquals(2, result.size());
+
         verify(inventarioRepository, times(1)).findAll();
     }
 

@@ -21,4 +21,5 @@ public class Inventario {
     private int producto;
     @Column(name = "stock")
     private int stock;
+
 }

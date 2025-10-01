@@ -2,9 +2,11 @@ package com.example.tienda17.controller;
 
 import com.example.tienda17.entity.Inventario;
 import com.example.tienda17.service.impl.InventarioService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import jakarta.websocket.server.PathParam;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Optional;
 
