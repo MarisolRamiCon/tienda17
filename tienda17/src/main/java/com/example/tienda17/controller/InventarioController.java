@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.websocket.server.PathParam;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @RestController
@@ -26,9 +27,11 @@ public class InventarioController {
     }
 
     @GetMapping("/inventario/{id}")
-    public Optional<Inventario> readById(@PathVariable Integer id){
-        return inventarioService.ReadById(id);
+    public Inventario readById(@PathVariable Integer id) {
+        return inventarioService.ReadById(id)
+                .orElseThrow(() -> new NoSuchElementException("Inventario no encontrado con id: " + id));
     }
+
 
     @PostMapping("/inventario")
     public Inventario create(@RequestBody Inventario inventario){
