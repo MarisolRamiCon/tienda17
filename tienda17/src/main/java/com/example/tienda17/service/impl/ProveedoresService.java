@@ -73,4 +73,20 @@ public class ProveedoresService implements InterProveedoresService {
             return "Proveedor no encontrado";
         }
     }
+
+    @Override
+    public List<ProveedoresResponse> findByBaja() {
+        return proveedoresRepository.proveedoresBaja();
+    }
+
+    @Override
+    public List<ProveedoresResponse> findByContacto(String contacto) {
+        List<Proveedores> proveedores = proveedoresRepository.findByContactoContaining(contacto);
+        if (proveedores.isEmpty()) {
+            throw new NoSuchElementException("No se encontraron proveedores");
+        }
+        return proveedores.stream()
+                .map(ProveedoresMapper::toResponse)
+                .toList();
+    }
 }

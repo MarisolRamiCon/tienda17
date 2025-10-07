@@ -13,4 +13,6 @@ public interface InterProveedoresService {
     ProveedoresResponse create(ProveedoresRequest request);
     ProveedoresResponse update(Integer id, ProveedoresRequest request);
     String deleteById(Integer id);
+    List<ProveedoresResponse> findByBaja();
+    List<ProveedoresResponse> findByContacto(String contacto);
 }
