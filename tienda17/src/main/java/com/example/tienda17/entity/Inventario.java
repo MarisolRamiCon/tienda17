@@ -21,5 +21,7 @@ public class Inventario {
     private int producto;
     @Column(name = "stock")
     private int stock;
+    @Column(name = "activo")
+    private Boolean activo;
 
 }

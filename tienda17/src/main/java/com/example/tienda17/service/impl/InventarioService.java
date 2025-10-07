@@ -1,6 +1,7 @@
 package com.example.tienda17.service.impl;
 
 import com.example.tienda17.entity.Inventario;
+import com.example.tienda17.entity.Proveedores;
 import com.example.tienda17.repository.InventarioRepository;
 import com.example.tienda17.service.InterInventarioService;
 import org.springframework.stereotype.Service;
@@ -37,8 +38,15 @@ public class InventarioService implements InterInventarioService {
 
     @Override
     public String deleteById(Integer id) {
-        inventarioRepository.deleteById(id);
-        return "Registro con ID " + id + " eliminado";
+        Optional<Inventario> inventarioOpt = inventarioRepository.findById(id);
+        if (inventarioOpt.isPresent()) {
+            Inventario inventario = inventarioOpt.get();
+            inventario.setActivo(false);          // marcamos como inactivo
+            inventarioRepository.save(inventario); // guardamos el cambio
+            return "Proveedor con id " + id + " dado de baja";
+        } else {
+            return "Proveedor no encontrado";
+        }
     }
 
     @Override

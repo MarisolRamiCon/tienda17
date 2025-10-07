@@ -45,4 +45,14 @@ public class ProveedoresController {
     public String delete(@PathVariable Integer id) {
         return proveedoresService.deleteById(id); // baja lógica
     }
+
+    @GetMapping("/proveedores/baja")
+    public List<ProveedoresResponse> findByBaja() {
+        return proveedoresService.findByBaja();
+    }
+
+    @GetMapping("/proveedores/contacto/{contacto}")
+    public List<ProveedoresResponse> findByContacto(@PathVariable String contacto) {
+        return proveedoresService.findByContacto(contacto);
+    }
 }
